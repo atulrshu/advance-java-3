@@ -11,16 +11,19 @@ public class App {
 		int[] ids = {0,1,2};
 		String[] names = {"Sue","Bob","Charley"}; 
 		
-		Class.forName("org.sqlite.JDBC");	
+		//Class.forName("org.sqlite.JDBC");
+		Class.forName("com.mysql.cj.jdbc.Driver");
 		
-		String dbUrl = "jdbc:sqlite:people.db";
-		var conn = DriverManager.getConnection(dbUrl);
+		//String dbUrl = "jdbc:sqlite:people.db";
+		//String dbUrl = "jdbc:mysql://localhost:3307/people?serverTimezone=UTC";
+		String dbUrl = "jdbc:mysql://localhost:3307/people";
+		var conn = DriverManager.getConnection(dbUrl,"root","root");
 		
 		var stmt = conn.createStatement();
 		conn.setAutoCommit(false);
 		
-		var sql = "create table if not exists user (id integer primary key, name text not null) ";
-		stmt.execute(sql);
+		//var sql = "create table if not exists user (id integer primary key, name text not null) ";
+		//stmt.execute(sql);
 		
 		//sql = "insert into user (id, name) values (0, 'Bob') ";
 		//stmt.execute(sql);
@@ -28,14 +31,14 @@ public class App {
 		//sql = "insert into user (id, name) values (1, 'Mary') ";
 		//stmt.execute(sql);
 		
-		sql = "insert into user (id, name) values (?, ?) ";
+		var sql = "insert into user (id, name) values (?, ?) ";
 		var insertStmt = conn.prepareStatement(sql);
 		
 		for(int i=0; i < ids.length ; i++) {
 			insertStmt.setInt(1, ids[i]);
 			insertStmt.setString(2, names[i]);
 			
-			//insertStmt.executeUpdate();
+			insertStmt.executeUpdate();
 		}
 		
 		conn.commit();
@@ -53,7 +56,7 @@ public class App {
 		}
 		
 		
-		sql = "drop table user";		
+		//sql = "drop table user";		
 		//stmt.execute(sql);
 		
 		stmt.close();
